@@ -48,7 +48,7 @@ _Initial notes:_
 
 Create a C++ Unreal project (e.g. Third Person C++ sample project) or import an existing project into your UE 4.27 HTML5 ES3. Make sure you can package the project for HTML5 in both Development and Shipping packaging configuration and have ran it locally in a web browser (e.g. using HTML5LauncherHelper.exe).
 
-From here on we assume this project is called `ThirdPerson` and is located at `c:/Projects/ThirdPerson`. Remember to replace this Unreal project name / directory for whatever your situation is in all the steps later.
+From here on we assume this project is called `ThirdPerson` and is located at `c:/ThirdPerson/ThirdPerson` (the double level directory is just to keep things organised with other code we will be using later). Remember to replace this Unreal project name / directory for whatever your situation is in all the steps later.
 
 ### Legal requirements
 
@@ -78,6 +78,7 @@ Create two copies of `ThirdPerson/Source/ThirdPerson.Target.cs called
 - `ThirdPersonServer.Target.cs`
 
 In `ThirdPersonClient.Target.cs` rename the class/constructor `ThirdPersonTarget` to `ThirdPersonClientTarget` and change `TargetType.Game` to `TargetType.Client`.
+
 In `ThirdPersonServer.Target.cs` rename the class/constructor `ThirdPersonTarget` to `ThirdPersonServerTarget` and change `TargetType.Game` to `TargetType.Server`.
 
 I like to add `bUseLoggingInShipping = true;` to the constructors too to get logging in Shipping builds.
@@ -94,8 +95,8 @@ Adhoc relies on telling the HTML5 client to connect to a particular server as a 
 
 Enable the command line and websocket URL via session storage functionality, which allows convenient passing of web socket / command line to the HTML5 client:
 
-Project Settings -> Platforms -> HTML5 -> Session storage WebSocket URL key: `UnrealEngine_WebSocketUrl`
-Project Settings -> Platforms -> HTML5 -> Session storage command line key: `UnrealEngine_CommandLine`
+- Project Settings -> Platforms -> HTML5 -> Session storage WebSocket URL key: `UnrealEngine_WebSocketUrl`
+- Project Settings -> Platforms -> HTML5 -> Session storage command line key: `UnrealEngine_CommandLine`
 
 You won't notice anything different yet with the HTML5 client but later steps will actually make use of this.
 
@@ -107,7 +108,7 @@ _Initial notes:_
 
 Clone the AdhocPlugin into the Plugins folder in your Unreal project:
 
-    cd c:/Projects/ThirdPerson
+    cd c:/ThirdPerson/ThirdPerson
     mkdir Plugins
     cd Plugins
     
@@ -137,11 +138,11 @@ https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Linux/GettingStarte
 
 _Initial notes:_
 
-    cd c:/Projects
+    cd c:/ThirdPerson
     
     git clone https://github.com/SpeculativeCoder/adhoc-web.git
     
-From here on we assume adhoc-web is located at `c:/Projects/adhoc-web`. Remember to replace this directory for whatever your situation is in all the steps later.
+From here on we assume adhoc-web is located at `c:/ThirdPerson/adhoc-web`. Remember to replace this directory for whatever your situation is in all the steps later.
 
 ### Run AdhocManagerApplication locally
 
@@ -149,7 +150,7 @@ From here on we assume adhoc-web is located at `c:/Projects/adhoc-web`. Remember
 
 _Initial notes:_
 
-    cd c:/Projects/adhoc-web
+    cd c:/ThirdPerson/adhoc-web
 
     mvn clean package -DskipTests
 
@@ -165,7 +166,7 @@ _Initial notes:_
 
 You will need to set a local testing server password. AdhocPlugin needs a matching password to talk to the web application when testing locally.
 
-Create a file `c:/Projects/adhoc-web/env/local.env`:
+Create a file `c:/ThirdPerson/adhoc-web/env/local.env`:
 
     SERVER_BASIC_AUTH_PASSWORD=TODO:\ local\ testing\ password
 
@@ -179,15 +180,16 @@ Run the project in the Unreal Editor and start play in editor. You should see it
 
 _Initial notes:_
 
-Create a file `c:/Projects/adhoc-web/env/common.env` with the following contents (remember to adjust to your name/directories etc.):
+Create a file `c:/ThirdPerson/adhoc-web/env/common.env` with the following contents (remember to adjust to your name/directories etc.):
 
     UNREAL_PROJECT_NAME=ThirdPerson
     UNREAL_PROJECT_REGION_MAPS=ThirdPersonExampleMap
     UNREAL_PROJECT_TRANSITION_MAP=Entry
-    UNREAL_PROJECT_DIR=c:/Projects/ThirdPerson
+    UNREAL_PROJECT_DIR=c:/ThirdPerson/ThirdPerson
     UNREAL_ENGINE_DIR=c:/UE/ue-4.27-html5-es3
+    ADHOC_NAME=thirdperson
 
-Create a file `c:/Projects/adhoc-web/customization/app-environment.ts`
+Create a file `c:/ThirdPerson/adhoc-web/customization/app-environment.ts`
 
     export const appEnvironment = {
         appTitle: 'ThirdPerson',
@@ -196,7 +198,7 @@ Create a file `c:/Projects/adhoc-web/customization/app-environment.ts`
     
 Replace `ThirdPerson Developer` with whatever you want to be known as in the About page - **this will be publicly visible on the deployed site so only use something you are comfortable presenting to the public.**
 
-Create a file in `c:/Projects/adhoc-web/customization/about-page-extra.ts`
+Create a file in `c:/ThirdPerson/adhoc-web/customization/about-page-extra.ts`
 
     export const aboutPageExtra = ``;
 
@@ -240,7 +242,7 @@ If you don't have a domain yet you can skip this step.
 
 _Initial notes:_
 
-Add the following to `c:/Projects/adhoc-web/env/common.env` in addition to its existing contents (remember to adjust to your domain):
+Add the following to `c:/ThirdPerson/adhoc-web/env/common.env` in addition to its existing contents (remember to adjust to your domain):
 
     SSL_ENABLED=true
     ADHOC_DOMAIN=example.com
@@ -251,7 +253,7 @@ Generate the certs:
 
     ./refresh_certs.sh
     
-This will generate certs and copy them into c:/Projects/adhoc-web/certs
+This will generate certs and copy them into c:/ThirdPerson/adhoc-web/certs
 
 This directory or its files should **never** be checked in to git (the directory is thus in the adhoc-web .gitignore to reduce the chance of accidental commit).
 
@@ -267,9 +269,9 @@ In your Unreal project, enable SSL:
 
 Project Settings -> Plugins -> WebSocket Networking
 - Enable SSL = true
-- CA certificate = ../../../certs/adhoc-ca.cer
-- Server Certificate = ../../../certs/adhoc.cer
-- Private Key = ../../../certs/adhoc.key
+- CA certificate = ../../../certs/thirdperson-ca.cer
+- Server Certificate = ../../../certs/thirdperson.cer
+- Private Key = ../../../certs/thirdperson.key
 - Editor Client Skip Hostname Check = true
 
 NOTE: If interested in a more detailed description of SSL in HTML5 see [here](https://github.com/SpeculativeCoder/UnrealEngine-HTML5-ES3/blob/main/Features/Feature-WebSocketSSL.md#enabling-websocket-ssl).
@@ -278,12 +280,12 @@ For local testing we can make the certs available to Unreal Editor.
 
 Create a directory `c:/UE/ue-4.27-html5-es3/certs`
 
-Copy the following files from `c:/Projects/adhoc-web/certs` to `c:/UE/ue-4.27-html5-es3/certs`:
-- adhoc.cer
-- adhoc.key
-- adhoc-ca.cer
+Copy the following files from `c:/ThirdPerson/adhoc-web/certs` to `c:/UE/ue-4.27-html5-es3/certs`:
+- thirdperson.cer
+- thirdperson.key
+- thirdperson-ca.cer
 
-This directory or its files should **never** be checked in to git - you can add `certs/` to the `.gitignore` in `c:/UE/ue-4.27-html5-es3` to help avoid accidentally checking in the certs.
+This directory or its files should **never** be checked in to git (the UnrealEngine .gitignore should already be ignoring by default but be sure you never accidentally add or check them in).
 
 ### Add a hosts file entry for your domain
 
@@ -324,18 +326,21 @@ Create a AWS adhoc_admin user with Administrator rights, generate an access toke
 
 _Initial notes:_
 
-Create a file `c:/Projects/adhoc-web/terraform/terraform.tfvars` (remember to adjust to your domain and whatever regions you want to use):
+Create a file `c:/ThirdPerson/adhoc-web/terraform/terraform.tfvars` (remember to adjust to your domain and whatever regions you want to use):
 
+    adhoc_name_dev="thirdperson"
+    adhoc_name_qa="thirdperson"
+    adhoc_name_prod="thirdperson"
     adhoc_region_dev = "eu-west-1"
     adhoc_region_qa = "us-east-1"
     adhoc_region_prod = "us-east-1"
     adhoc_domain = "example.com"
-    
+
 If you don't have a domain yet - do not include that line.
 
 Apply terraform in `dev` workspace:
 
-    cd c:/Projects/adhoc-web/terraform
+    cd c:/ThirdPerson/adhoc-web/terraform
 
     terraform workspace new dev
     terraform plan
@@ -349,17 +354,17 @@ Terraform state (containing sensitive information including passwords/certificat
 
 _Initial notes:_
 
-In `c:/Projects/adhoc-web/env/dev.env` (remember to adjust the below to whatever region you are using):
+In `c:/ThirdPerson/adhoc-web/env/dev.env` (remember to adjust the below to whatever region you are using):
 
     AWS_REGION=eu-west-2
     SERVER_AVAILABILITY_ZONE=eu-west-2a
     
-In `c:/Projects/adhoc-web/env/qa.env` (remember to adjust the below to whatever region you are using):
+In `c:/ThirdPerson/adhoc-web/env/qa.env` (remember to adjust the below to whatever region you are using):
 
     AWS_REGION=us-east-2
     SERVER_AVAILABILITY_ZONE=us-east-2a
 
-In `c:/Projects/adhoc-web/env/prod.env` (remember to adjust the below to whatever region you are using):
+In `c:/ThirdPerson/adhoc-web/env/prod.env` (remember to adjust the below to whatever region you are using):
 
     AWS_REGION=us-east-2
     SERVER_AVAILABILITY_ZONE=us-east-2a
@@ -380,7 +385,7 @@ Build / upload the dev images:
 
 _Initial notes:_
 
-Set adhoc_manager and adhoc_kiosk service to 1 instance.
+Set thirdperson_manager and thirdperson_kiosk service to 1 instance.
 
 Check logs.
 
@@ -396,7 +401,7 @@ _Initial notes:_
 
 Remember to destroy the environment to avoid any further costs!
 
-    cd c:/Projects/adhoc-web/terraform
+    cd c:/ThirdPerson/adhoc-web/terraform
 
     terraform destroy
 
