@@ -77,9 +77,9 @@ Create two copies of `ThirdPerson/Source/ThirdPerson.Target.cs called
 - `ThirdPersonClient.Target.cs`
 - `ThirdPersonServer.Target.cs`
 
-In `ThirdPersonClient.Target.cs` rename the class/constructor `ThirdPersonTarget` to `ThirdPersonClientTarget` and change `TargetType.Game` to `TargetType.Client`.
+In `ThirdPersonClient.Target.cs` rename the class and constructor `ThirdPersonTarget` to `ThirdPersonClientTarget` and change `TargetType.Game` to `TargetType.Client`.
 
-In `ThirdPersonServer.Target.cs` rename the class/constructor `ThirdPersonTarget` to `ThirdPersonServerTarget` and change `TargetType.Game` to `TargetType.Server`.
+In `ThirdPersonServer.Target.cs` rename the class and constructor `ThirdPersonTarget` to `ThirdPersonServerTarget` and change `TargetType.Game` to `TargetType.Server`.
 
 I like to add `bUseLoggingInShipping = true;` to the constructors too to get logging in Shipping builds.
 
@@ -95,8 +95,8 @@ Adhoc relies on telling the HTML5 client to connect to a particular server as a 
 
 Enable the command line and websocket URL via session storage functionality, which allows convenient passing of web socket / command line to the HTML5 client:
 
-- Project Settings -> Platforms -> HTML5 -> Session storage WebSocket URL key: `UnrealEngine_WebSocketUrl`
 - Project Settings -> Platforms -> HTML5 -> Session storage command line key: `UnrealEngine_CommandLine`
+- Project Settings -> Platforms -> HTML5 -> Session storage WebSocket URL key: `UnrealEngine_WebSocketUrl`
 
 You won't notice anything different yet with the HTML5 client but later steps will actually make use of this.
 
@@ -112,7 +112,7 @@ Clone the AdhocPlugin into the Plugins folder in your Unreal project:
     mkdir Plugins
     cd Plugins
     
-    git clone https://github.com/SpeculativeCoder/AdhocPlugin.git 
+    git clone https://github.com/SpeculativeCoder/AdhocPlugin.git AdhocPlugin
 
 ### Compile/test Unreal project with AdhocPlugin
 
@@ -123,6 +123,8 @@ _Initial notes:_
 Build the Visual Studio project again for your Unreal project. It should pick up the AdhocPlugin in the compile.
 
 You should see/enable the plugin in your Unreal project now (see Edit -> Plugins -> Search for Adhoc -> AdhocPlugin -> Enabled - make sure this is ticked). Make sure you can still run the project in the Unreal Editor with the plugin enabled. It may try to connect to localhost when it starts (and fail with an error in the output log) but that is OK for now.
+
+Make sure also that you can still build the HTML5 Client (e.g. HTML5 ThirdPersonClient) and it works (the plugin shouldn't cause any issues).
 
 ### Ensure you can build Linux dedicated server
 
@@ -140,7 +142,7 @@ _Initial notes:_
 
     cd c:/ThirdPerson
     
-    git clone https://github.com/SpeculativeCoder/adhoc-web.git
+    git clone https://github.com/SpeculativeCoder/adhoc-web.git adhoc-web
     
 From here on we assume adhoc-web is located at `c:/ThirdPerson/adhoc-web`. Remember to replace this directory for whatever your situation is in all the steps later.
 
@@ -172,7 +174,7 @@ Create a file `c:/ThirdPerson/adhoc-web/env/local.env`:
 
 Now restart AdhocManagerApplication - instead of using a random password it will pick up this testing password above.
 
-Run the project in the Unreal Editor and start play in editor. You should see it start talking to the manager running locally.
+Run the project in the Unreal Editor and start play in editor. You should see it start talking to the manager running and should see a message regarding "OnStompConnected" which means the websocket is connected OK.
 
 ### Setup env/common.env and customization/app-environment.ts file
 
@@ -189,40 +191,46 @@ Create a file `c:/ThirdPerson/adhoc-web/env/common.env` with the following conte
     UNREAL_ENGINE_DIR=c:/UE/ue-4.27-html5-es3
     ADHOC_NAME=thirdperson
 
-Create a file `c:/ThirdPerson/adhoc-web/customization/app-environment.ts`
+NOTE: The Entry map is always available to use as a transition/loading screen in most Unreal projects as it comes from the engine so you should be OK using this if you don't have your own.
 
-    export const appEnvironment = {
-        appTitle: 'ThirdPerson',
-        appDeveloper: 'ThirdPerson Developer'
+Create a directory `c:/ThirdPerson/adhoc-web/adhoc-angular-app/src/customization`
+
+Copy `c:/ThirdPerson/adhoc-web/adhoc-angular-app/src/app/app-customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular-app/src/customization/app-customization.ts`
+
+Modify it to be what you want to be known as in the About page - **this will be publicly visible on the deployed site so only include information you are comfortable presenting to the public.**
+
+    /** you can create a copy of this in src/customization and tailor it to your needs */
+    export const appCustomization = {
+      appTitle: 'ThirdPerson',
+      appDeveloper: 'ThirdPerson Developer',
+
+      /** any additional about information (e.g. assets used etc.) can go in here */
+      aboutPageMoreHtml: `
+    <p>Hello, World!</p>
+      `,
     };
-    
-Replace `ThirdPerson Developer` with whatever you want to be known as in the About page - **this will be publicly visible on the deployed site so only use something you are comfortable presenting to the public.**
 
-Create a file in `c:/ThirdPerson/adhoc-web/customization/about-page-extra.ts`
-
-    export const aboutPageExtra = ``;
-
-You can put any HTML in here to add to the About page which will also be visible to the public. You can leave it empty for now.
-
-### build_all_dev
+### build_all_local
 
 **TODO: Write/complete documentation for this step.**
 
 _Initial notes:_
 
-    ./build_all_dev.sh
+    ./build_all_local.sh
     
 ### Run AdhocManagerApplication locally, then connect via web HTML5 client
 
 **TODO: Write/complete documentation for this step.**
 
+Run AdhocManagerApplication.
+Run the Unreal Editor as a Listen server.
+On the web page - you should be able to connect to the server via double click.
+
 ### Run AdhocManagerApplication locally in Docker profile then connect via web HTML5 client
 
 **TODO: Write/complete documentation for this step.**
 
-The default profiles when running AdhocManagerApplication are `db-hsqldb,hosting-local,dns-local`
-
-To run the test servers in Docker (rather than having to run your own server in Unreal Editor) you can run AdhocManagerApplication using profiles `db-hsqldb,hosting-docker,dns-local`.
+To run the test servers in Docker (rather than having to run your own server in Unreal Editor) you can run AdhocManagerApplication using profiles `db-hsqldb,hosting-docker,dns-local` (the default profiles when running AdhocManagerApplication are `db-hsqldb,hosting-local,dns-local`).
 
 This will start up the Unreal servers in your local Docker, rather than you having to manually run a server in Unreal Editor. It is thus much closer to the final cloud deployment as there are multiple servers running in Linux containers etc.
 
@@ -244,8 +252,11 @@ _Initial notes:_
 
 Add the following to `c:/ThirdPerson/adhoc-web/env/common.env` in addition to its existing contents (remember to adjust to your domain):
 
-    SSL_ENABLED=true
-    ADHOC_DOMAIN=example.com
+```
+SSL_ENABLED=true
+ADHOC_DOMAIN=example.com
+ROUTE53_ZONE=example.com
+```
 
 If you don't have a domain yet you don't need to add either of these lines (effectively this means SSL_ENABLED will treated as false) and should skip the rest of this step (you won't be able to generate certs).
 
@@ -297,10 +308,12 @@ If you don't have a domain yet you can skip this step.
 
 Add the following to hosts file:
 
-    127.0.0.1	manager-local.example.com
-    127.0.0.1	kiosk-local.example.com
-    127.0.0.1   1-server-local.example.com
-    127.0.0.1   2-server-local.example.com
+```
+127.0.0.1   manager-local.example.com
+127.0.0.1   kiosk-local.example.com
+127.0.0.1   1-server-local.example.com
+127.0.0.1   2-server-local.example.com
+```
 
 ### Run AdhocManagerApplication locally in Docker profile then connect via web HTML5 client to test HTTPS/WSS connections
 
@@ -326,21 +339,23 @@ Create a AWS adhoc_admin user with Administrator rights, generate an access toke
 
 _Initial notes:_
 
-Create a file `c:/ThirdPerson/adhoc-web/terraform/terraform.tfvars` (remember to adjust to your domain and whatever regions you want to use):
+Create a file `c:/ThirdPerson/adhoc-web/terraform/terraform.tfvars` which will define various infrastructure settings. Remember to adjust to your domain and whatever regions you want to use (if you don't have a domain yet - do not include that line):
 
-    adhoc_name_dev="thirdperson"
-    adhoc_name_qa="thirdperson"
-    adhoc_name_prod="thirdperson"
-    adhoc_region_dev = "eu-west-1"
-    adhoc_region_qa = "us-east-1"
-    adhoc_region_prod = "us-east-1"
-    adhoc_domain = "example.com"
-
-If you don't have a domain yet - do not include that line.
+```
+adhoc_name_dev = "thirdperson"
+adhoc_name_qa = "thirdperson"
+adhoc_name_prod = "thirdperson"
+adhoc_region_dev = "eu-west-2"
+adhoc_region_qa = "us-east-2"
+adhoc_region_prod = "us-east-2"
+route53_zone = "example.com"
+```
 
 Apply terraform in `dev` workspace:
 
     cd c:/ThirdPerson/adhoc-web/terraform
+
+    terraform init
 
     terraform workspace new dev
     terraform plan
@@ -356,18 +371,24 @@ _Initial notes:_
 
 In `c:/ThirdPerson/adhoc-web/env/dev.env` (remember to adjust the below to whatever region you are using):
 
-    AWS_REGION=eu-west-2
-    SERVER_AVAILABILITY_ZONE=eu-west-2a
-    
+```
+AWS_REGION=eu-west-2
+SERVER_AVAILABILITY_ZONE=eu-west-2a
+```
+ 
 In `c:/ThirdPerson/adhoc-web/env/qa.env` (remember to adjust the below to whatever region you are using):
 
-    AWS_REGION=us-east-2
-    SERVER_AVAILABILITY_ZONE=us-east-2a
+```
+AWS_REGION=us-east-2
+SERVER_AVAILABILITY_ZONE=us-east-2a
+```
 
 In `c:/ThirdPerson/adhoc-web/env/prod.env` (remember to adjust the below to whatever region you are using):
 
-    AWS_REGION=us-east-2
-    SERVER_AVAILABILITY_ZONE=us-east-2a
+```
+AWS_REGION=us-east-2
+SERVER_AVAILABILITY_ZONE=us-east-2a
+```
 
 ### Build All and Upload Dev
 
@@ -385,11 +406,11 @@ Build / upload the dev images:
 
 _Initial notes:_
 
-Set thirdperson_manager and thirdperson_kiosk service to 1 instance.
+Set thirdperson_manager and thirdperson_kiosk service to 1 instance via AWS console (go to the ECS section for the appropriate region and you should see the services).
 
 Check logs.
 
-Hit dev environment e.g. dev.example.com
+Hit dev environment e.g. dev.example.com (if you don't have a domain you will have to access the kiosk task directly via the public IP that AWS will have assigned).
 
 Make sure to set the services back to 0 at the end to switch off the tasks. Wait a few minutes and double check to be sure there are no longer any tasks running in the cluster.
 
@@ -407,7 +428,7 @@ Remember to destroy the environment to avoid any further costs!
 
 ## Documentation Copyright / License
 
-Copyright (c) 2022-2023 SpeculativeCoder (https://github.com/SpeculativeCoder)
+Copyright (c) 2022-2024 SpeculativeCoder (https://github.com/SpeculativeCoder)
 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
