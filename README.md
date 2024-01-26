@@ -193,9 +193,9 @@ Create a file `c:/ThirdPerson/adhoc-web/env/common.env` with the following conte
 
 NOTE: The Entry map is always available to use as a transition/loading screen in most Unreal projects as it comes from the engine so you should be OK using this if you don't have your own.
 
-Create a directory `c:/ThirdPerson/adhoc-web/adhoc-angular-app/src/customization`
+Create a directory `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization`
 
-Copy `c:/ThirdPerson/adhoc-web/adhoc-angular-app/src/app/app-customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular-app/src/customization/app-customization.ts`
+Copy `c:/ThirdPerson/adhoc-web/adhoc-angular/src/app/app-customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/app-customization.ts`
 
 Modify it to be what you want to be known as in the About page - **this will be publicly visible on the deployed site so only include information you are comfortable presenting to the public.**
 
