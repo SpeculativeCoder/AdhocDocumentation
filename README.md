@@ -211,13 +211,13 @@ Modify it to be what you want to be known as in the About page - **this will be 
       `,
     };
 
-### build_all_local
+### build_all_dev
 
 **TODO: Write/complete documentation for this step.**
 
 _Initial notes:_
 
-    ./build_all_local.sh
+    ./build_all_dev.sh
     
 ### Run AdhocManagerApplication locally, then connect via web HTML5 client
 
