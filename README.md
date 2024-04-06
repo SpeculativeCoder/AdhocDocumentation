@@ -231,7 +231,7 @@ On the web page - you should be able to connect to the server via double click.
 
 **TODO: Write/complete documentation for this step.**
 
-To run the test servers in Docker (rather than having to run your own server in Unreal Editor) you can run AdhocManagerApplication using profiles `db-hsqldb,hosting-docker,dns-local` (the default profiles when running AdhocManagerApplication are `db-hsqldb,hosting-local,dns-local`).
+To run the test servers in Docker (rather than having to run your own server in Unreal Editor) you can run AdhocManagerApplication using profiles `db-h2,hosting-docker,dns-local` (the default profiles when running AdhocManagerApplication are `db-h2,hosting-local,dns-local`).
 
 This will start up the Unreal servers in your local Docker, rather than you having to manually run a server in Unreal Editor. It is thus much closer to the final cloud deployment as there are multiple servers running in Linux containers etc.
 
