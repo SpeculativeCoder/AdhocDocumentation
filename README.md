@@ -195,12 +195,12 @@ NOTE: The Entry map is always available to use as a transition/loading screen in
 
 Create a directory `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization`
 
-Copy `c:/ThirdPerson/adhoc-web/adhoc-angular/src/app/app-constants.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/app-constants.ts`
+Copy `c:/ThirdPerson/adhoc-web/adhoc-angular/src/app/app-customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/app-customization.ts`
 
 Modify it to be what you want to be known as in the About page - **this will be publicly visible on the deployed site so only include information you are comfortable presenting to the public.**
 
     /** you can create a copy of this in src/customization and tailor it to your needs */
-    export const appConstants = {
+    export const appCustomization = {
       appTitle: 'ThirdPerson',
       appDescription: 'ThirdPerson Example',
       appDeveloper: 'ThirdPerson Developer',
@@ -209,6 +209,9 @@ Modify it to be what you want to be known as in the About page - **this will be 
       aboutPageMoreHtml: `
     <p>Hello, World!</p>
       `,
+
+      /** if adhoc-angular-extra is available this can be set to <tt>extra</tt> */
+      extra: null
     };
 
 ### build_all_dev
