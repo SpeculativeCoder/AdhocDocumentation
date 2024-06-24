@@ -48,6 +48,8 @@ _Initial notes:_
 
 Create a C++ Unreal project (e.g. Third Person C++ sample project) or import an existing project into your UE 4.27 HTML5 ES3. Make sure you can package the project for HTML5 in both Development and Shipping packaging configuration and have ran it locally in a web browser (e.g. using HTML5LauncherHelper.exe).
 
+Make sure you have enabled the WebSocket Networking plugin and are able to connect locally from the web browser to the project running in the editor in listen/server mode.
+
 From here on we assume this project is called `ThirdPerson` and is located at `c:/ThirdPerson/ThirdPerson` (the double level directory is just to keep things organised with other code we will be using later). Remember to replace this Unreal project name / directory for whatever your situation is in all the steps later.
 
 ### Legal requirements
