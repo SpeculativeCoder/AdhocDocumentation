@@ -197,15 +197,15 @@ NOTE: The Entry map is always available to use as a transition/loading screen in
 
 Create a directory `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization`
 
-Copy `c:/ThirdPerson/adhoc-web/adhoc-angular/src/app/app-customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/app-customization.ts`
+Copy `c:/ThirdPerson/adhoc-web/adhoc-angular/src/app/customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/customization.ts`
 
 Modify it to be what you want to be known as in the About page - **this will be publicly visible on the deployed site so only include information you are comfortable presenting to the public.**
 
     /** you can create a copy of this in src/customization and tailor it to your needs */
-    export const appCustomization = {
-      appTitle: 'ThirdPerson',
-      appDescription: 'ThirdPerson Example',
-      appDeveloper: 'ThirdPerson Developer',
+    export const customization = {
+      title: 'ThirdPerson',
+      description: 'ThirdPerson Example',
+      developer: 'ThirdPerson Developer',
 
       /** any additional about information (e.g. assets used etc.) can go in here */
       aboutPageMoreHtml: `
