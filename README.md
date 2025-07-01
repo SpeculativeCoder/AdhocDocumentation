@@ -38,7 +38,7 @@ _Initial notes:_
 
 https://github.com/SpeculativeCoder/UnrealEngine-HTML5-ES3
 
-From here on we assume that Unreal Engine is located at `c:/UE/ue-4.27-html5-es3` (NOTE: the forward slashes rather than backslashes are how Git Bash see things, and we do all our work in Git Bash). Remember to replace this directory for whatever your situation is in all the steps later.
+From here on we assume that Unreal Engine is located at `D:/git/ue-4.27-html5-es3` (NOTE: the forward slashes rather than backslashes are how Git Bash see things - we do all our work in Git Bash). Remember to replace this directory for whatever your situation is in all the steps later.
 
 ### Create an Unreal project
 
@@ -46,11 +46,15 @@ From here on we assume that Unreal Engine is located at `c:/UE/ue-4.27-html5-es3
 
 _Initial notes:_
 
-Create a C++ Unreal project (e.g. Third Person C++ sample project) or import an existing project into your UE 4.27 HTML5 ES3. Make sure you can package the project for HTML5 in both Development and Shipping packaging configuration and have ran it locally in a web browser (e.g. using HTML5LauncherHelper.exe).
+Create a C++ Unreal project or import an existing project into your UE 4.27 HTML5 ES3 Editor. For this documentation we will use a Third Person C++ template project.
 
-Make sure you have enabled the WebSocket Networking plugin and are able to connect locally from the web browser to the project running in the editor in listen/server mode.
+From here on we assume this project is called `ThirdPerson` and is located at `D:/ThirdPerson/ThirdPerson` (the double level directory is just to keep things organised with other code we will be using later). Remember to replace this project name / directory for whatever is needed for your project in all the steps later.
 
-From here on we assume this project is called `ThirdPerson` and is located at `c:/ThirdPerson/ThirdPerson` (the double level directory is just to keep things organised with other code we will be using later). Remember to replace this Unreal project name / directory for whatever your situation is in all the steps later.
+Make sure you can package the project for HTML5 in both Development and Shipping packaging configuration and have ran it locally in a web browser (e.g. using HTML5LauncherHelper.exe).
+
+Make sure you have enabled the WebSocket Networking plugin and are able to connect locally from the web browser to the project running in the editor in Listen mode.
+
+Make sure you have enabled **Project Settings -> Platforms - HTML5 -> Use ASTC Data Variant for Mobile**.
 
 ### Legal requirements
 
@@ -110,7 +114,7 @@ _Initial notes:_
 
 Clone the AdhocPlugin into the Plugins folder in your Unreal project:
 
-    cd c:/ThirdPerson/ThirdPerson
+    cd D:/ThirdPerson/ThirdPerson
     mkdir Plugins
     cd Plugins
     
@@ -124,9 +128,9 @@ _Initial notes:_
 
 Build the Visual Studio project again for your Unreal project. It should pick up the AdhocPlugin in the compile.
 
-You should see/enable the plugin in your Unreal project now (see Edit -> Plugins -> Search for Adhoc -> AdhocPlugin -> Enabled - make sure this is ticked). Make sure you can still run the project in the Unreal Editor with the plugin enabled. It may try to connect to localhost when it starts (and fail with an error in the output log) but that is OK for now.
+You should see the plugin in your Unreal project now (see Edit -> Plugins -> Search for Adhoc -> AdhocPlugin -> Enabled - make sure this is ticked). Make sure you can still run the project in the Unreal Editor with the plugin enabled. It may try to connect to localhost when it starts (and fail with an error in the output log) but that is OK for now.
 
-Make sure also that you can still build the HTML5 Client (e.g. HTML5 ThirdPersonClient) and it works (the plugin shouldn't cause any issues).
+Make sure also that you can build the HTML5 Client (e.g. HTML5 ThirdPersonClient) and it works in the browser (the plugin shouldn't cause any issues).
 
 ### Ensure you can build Linux dedicated server
 
@@ -136,17 +140,19 @@ _Initial notes:_
 
 https://docs.unrealengine.com/4.27/en-US/SharingAndReleasing/Linux/GettingStarted/
 
+Make sure you can package for Linux Server in both Development and Shipping.
+
 ### Clone adhoc-web
 
 **TODO: Write/complete documentation for this step.**
 
 _Initial notes:_
 
-    cd c:/ThirdPerson
+    cd D:/ThirdPerson
     
     git clone https://github.com/SpeculativeCoder/adhoc-web.git adhoc-web
     
-From here on we assume adhoc-web is located at `c:/ThirdPerson/adhoc-web`. Remember to replace this directory for whatever your situation is in all the steps later.
+From here on we assume adhoc-web is located at `D:/ThirdPerson/adhoc-web`. Remember to replace this directory for whatever your situation is in all the steps later.
 
 ### Run AdhocManagerApplication locally
 
@@ -154,13 +160,13 @@ From here on we assume adhoc-web is located at `c:/ThirdPerson/adhoc-web`. Remem
 
 _Initial notes:_
 
-    cd c:/ThirdPerson/adhoc-web
+    cd D:/ThirdPerson/adhoc-web
 
     mvn clean package -DskipTests
 
-Run the `AdhocManagerApplication` class in your Java IDE.
+You can now run the `AdhocManagerApplication` class in your Java IDE.
 
-You should be able to see it running at http://localhost:80
+You should be able to see it running at http://localhost
 
 ### Test server / client interaction
 
@@ -170,13 +176,15 @@ _Initial notes:_
 
 You will need to set a local testing server password. AdhocPlugin needs a matching password to talk to the web application when testing locally.
 
-Create a file `c:/ThirdPerson/adhoc-web/env/local.env`:
+Create a file `D:/ThirdPerson/adhoc-web/env/local.env`:
 
-    SERVER_BASIC_AUTH_PASSWORD=TODO:\ local\ testing\ password
+```
+SERVER_BASIC_AUTH_PASSWORD=TODO:\ local\ testing\ password
+```
 
 Now restart AdhocManagerApplication - instead of using a random password it will pick up this testing password above.
 
-Run the project in the Unreal Editor and start play in editor. You should see it start talking to the manager running and should see a message regarding "OnStompConnected" which means the websocket is connected OK.
+Run the project in the Unreal Editor and start play in editor. You should see the server appear in the web application (you won't be able to connect via the HTML5 client yet though).
 
 ### Setup env/common.env and customization/app-environment.ts file
 
@@ -184,37 +192,41 @@ Run the project in the Unreal Editor and start play in editor. You should see it
 
 _Initial notes:_
 
-Create a file `c:/ThirdPerson/adhoc-web/env/common.env` with the following contents (remember to adjust to your name/directories etc.):
+Create a file `D:/ThirdPerson/adhoc-web/env/common.env` with the following contents (remember to adjust to your name/directories etc.):
 
-    UNREAL_PROJECT_NAME=ThirdPerson
-    UNREAL_PROJECT_REGION_MAPS=ThirdPersonExampleMap
-    UNREAL_PROJECT_TRANSITION_MAP=Entry
-    UNREAL_PROJECT_DIR=c:/ThirdPerson/ThirdPerson
-    UNREAL_ENGINE_DIR=c:/UE/ue-4.27-html5-es3
-    ADHOC_NAME=thirdperson
+```
+UNREAL_PROJECT_NAME=ThirdPerson
+UNREAL_PROJECT_REGION_MAPS=ThirdPersonExampleMap
+UNREAL_PROJECT_TRANSITION_MAP=Entry
+UNREAL_PROJECT_DIR=D:/ThirdPerson/ThirdPerson
+UNREAL_ENGINE_DIR=D:/git/ue-4.27-html5-es3
+ADHOC_NAME=thirdperson
+```
 
 NOTE: The Entry map is always available to use as a transition/loading screen in most Unreal projects as it comes from the engine so you should be OK using this if you don't have your own.
 
-Create a directory `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization`
+Create a directory `D:/ThirdPerson/adhoc-web/adhoc-angular/src/customization`
 
-Copy `c:/ThirdPerson/adhoc-web/adhoc-angular/src/app/customization.ts` to `c:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/customization.ts`
+Copy `D:/ThirdPerson/adhoc-web/adhoc-angular/src/app/customization.ts` to `D:/ThirdPerson/adhoc-web/adhoc-angular/src/customization/customization.ts`
 
 Modify it to be what you want to be known as in the About page - **this will be publicly visible on the deployed site so only include information you are comfortable presenting to the public.**
 
-    /** you can create a copy of this in src/customization and tailor it to your needs */
-    export const customization = {
-      title: 'ThirdPerson',
-      description: 'ThirdPerson Example',
-      developer: 'ThirdPerson Developer',
+```
+/** You can create a copy of this in src/customization and tailor it to your needs. */
+export const customization = {
+  title: 'ThirdPerson',
+  description: 'ThirdPerson Example',
+  developer: 'ThirdPerson Developer',
 
-      /** any additional about information (e.g. assets used etc.) can go in here */
-      aboutPageMoreHtml: `
-    <p>Hello, World!</p>
-      `,
+  /** Any additional about information (e.g. assets used etc.) can go in here. */
+  aboutPageMoreHtml: `
+<p>Hello, World!</p>
+  `,
 
-      /** if adhoc-angular-extra is available this can be set to <tt>extra</tt> */
-      extra: null
-    };
+  /** If adhoc-angular-extra is available this can be set to <tt>extra</tt> */
+  extra: null
+};
+```
 
 ### build_all_dev
 
@@ -222,7 +234,7 @@ Modify it to be what you want to be known as in the About page - **this will be 
 
 _Initial notes:_
 
-    ./build_all_dev.sh
+Run ./build_all_dev.sh
     
 ### Run AdhocManagerApplication locally, then connect via web HTML5 client
 
@@ -236,7 +248,7 @@ On the web page - you should be able to connect to the server via double click.
 
 **TODO: Write/complete documentation for this step.**
 
-To run the test servers in Docker (rather than having to run your own server in Unreal Editor) you can run AdhocManagerApplication using profiles `db-h2postgres,hosting-docker,dns-local` (the default profiles when running AdhocManagerApplication are `db-h2postgres,hosting-local,dns-local`).
+To run the test servers in Docker (rather than having to run your own server in Unreal Editor) you can run AdhocManagerApplication using profile `hosting-docker` (the default hosting profile when running AdhocManagerApplication is `hosting-local`).
 
 This will start up the Unreal servers in your local Docker, rather than you having to manually run a server in Unreal Editor. It is thus much closer to the final cloud deployment as there are multiple servers running in Linux containers etc.
 
@@ -245,6 +257,8 @@ This will start up the Unreal servers in your local Docker, rather than you havi
 **TODO: Write/complete documentation for this step.**
 
 _Initial notes:_
+
+The next steps assume you have already set up acme.sh e.g. via something like `./acme.sh --install -m thirdperson@example.com --nocron`
 
 Create a AWS adhoc_acme user with appropriate Route53 access, generate an access token, and set this as adhoc_acme as a user in your AWS profile file(s). This will be used when invoking acme.sh to do domain cert creation.
 
@@ -256,12 +270,12 @@ If you don't have a domain yet you can skip this step.
 
 _Initial notes:_
 
-Add the following to `c:/ThirdPerson/adhoc-web/env/common.env` in addition to its existing contents (remember to adjust to your domain):
+Add the following to `D:/ThirdPerson/adhoc-web/env/common.env` in addition to its existing contents (remember to adjust to your domain):
 
 ```
 SSL_ENABLED=true
-ADHOC_DOMAIN=example.com
-ROUTE53_ZONE=example.com
+ADHOC_DOMAIN=thirdperson.example.com
+ROUTE53_ZONE=thirdperson.example.com
 ```
 
 If you don't have a domain yet you don't need to add either of these lines (effectively this means SSL_ENABLED will treated as false) and should skip the rest of this step (you won't be able to generate certs).
@@ -270,9 +284,16 @@ Generate the certs:
 
     ./refresh_certs.sh
     
-This will generate certs and copy them into c:/ThirdPerson/adhoc-web/certs
+This will generate these certs and copy them into `D:/ThirdPerson/adhoc-web/certs`:
+- thirdperson.cer
+- thirdperson.key
+- thirdperson-ca.cer
 
 This directory or its files should **never** be checked in to git (the directory is thus in the adhoc-web .gitignore to reduce the chance of accidental commit).
+
+The certs will also have been copied to `D:/git/ue-4.27-html5-es3/certs`
+
+Again, this directory or its files should **never** be checked in to git (the UnrealEngine .gitignore should already be ignoring by default but be sure you never accidentally add or check them in).
 
 ### Enable SSL in Unreal project and web project 
 
@@ -293,17 +314,6 @@ Project Settings -> Plugins -> WebSocket Networking
 
 NOTE: If interested in a more detailed description of SSL in HTML5 see [here](https://github.com/SpeculativeCoder/UnrealEngine-HTML5-ES3/blob/main/Features/Feature-WebSocketSSL.md#enabling-websocket-ssl).
 
-For local testing we can make the certs available to Unreal Editor.
-
-Create a directory `c:/UE/ue-4.27-html5-es3/certs`
-
-Copy the following files from `c:/ThirdPerson/adhoc-web/certs` to `c:/UE/ue-4.27-html5-es3/certs`:
-- thirdperson.cer
-- thirdperson.key
-- thirdperson-ca.cer
-
-This directory or its files should **never** be checked in to git (the UnrealEngine .gitignore should already be ignoring by default but be sure you never accidentally add or check them in).
-
 ### Add a hosts file entry for your domain
 
 **TODO: Write/complete documentation for this step.**
@@ -312,16 +322,16 @@ _Initial notes:_
 
 If you don't have a domain yet you can skip this step.
 
-Add the following to hosts file:
+Add the following to C:/Windows/System32/drivers/etc/hosts file (typically you could do this by running Notepad as Administrator and editing the file):
 
 ```
-127.0.0.1   manager-local.example.com
-127.0.0.1   kiosk-local.example.com
-127.0.0.1   1-server-local.example.com
-127.0.0.1   2-server-local.example.com
+127.0.0.1 manager-local.thirdperson.example.com
+127.0.0.1 kiosk-local.thirdperson.example.com
+127.0.0.1 1-server-local.thirdperson.example.com
+127.0.0.1 2-server-local.thirdperson.example.com
 ```
 
-### Run AdhocManagerApplication locally in Docker profile then connect via web HTML5 client to test HTTPS/WSS connections
+### Run AdhocManagerApplication locally with hosting-docker profile then connect via web HTML5 client to test HTTPS/WSS connections
 
 **TODO: Write/complete documentation for this step.**
 
@@ -345,7 +355,7 @@ Create a AWS adhoc_admin user with Administrator rights, generate an access toke
 
 _Initial notes:_
 
-Create a file `c:/ThirdPerson/adhoc-web/terraform/terraform.tfvars` which will define various infrastructure settings. Remember to adjust to your domain and whatever regions you want to use (if you don't have a domain yet - do not include that line):
+Create a file `D:/ThirdPerson/adhoc-web/terraform/terraform.tfvars` which will define various infrastructure settings. Remember to adjust to your domain and whatever regions you want to use (if you don't have a domain yet - do not include that line):
 
 ```
 adhoc_name_dev = "thirdperson"
@@ -359,7 +369,7 @@ route53_zone = "example.com"
 
 Apply terraform in `dev` workspace:
 
-    cd c:/ThirdPerson/adhoc-web/terraform
+    cd D:/ThirdPerson/adhoc-web/terraform
 
     terraform init
 
@@ -375,21 +385,21 @@ Terraform state (containing sensitive information including passwords/certificat
 
 _Initial notes:_
 
-In `c:/ThirdPerson/adhoc-web/env/dev.env` (remember to adjust the below to whatever region you are using):
+In `D:/ThirdPerson/adhoc-web/env/dev.env` (remember to adjust the below to whatever region you are using):
 
 ```
 AWS_REGION=eu-west-2
 SERVER_AVAILABILITY_ZONE=eu-west-2a
 ```
  
-In `c:/ThirdPerson/adhoc-web/env/qa.env` (remember to adjust the below to whatever region you are using):
+In `D:/ThirdPerson/adhoc-web/env/qa.env` (remember to adjust the below to whatever region you are using):
 
 ```
 AWS_REGION=us-east-2
 SERVER_AVAILABILITY_ZONE=us-east-2a
 ```
 
-In `c:/ThirdPerson/adhoc-web/env/prod.env` (remember to adjust the below to whatever region you are using):
+In `D:/ThirdPerson/adhoc-web/env/prod.env` (remember to adjust the below to whatever region you are using):
 
 ```
 AWS_REGION=us-east-2
@@ -428,7 +438,7 @@ _Initial notes:_
 
 Remember to destroy the environment to avoid any further costs!
 
-    cd c:/ThirdPerson/adhoc-web/terraform
+    cd D:/ThirdPerson/adhoc-web/terraform
 
     terraform destroy
 
